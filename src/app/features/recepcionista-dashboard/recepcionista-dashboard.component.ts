@@ -27,8 +27,7 @@ export class RecepcionistaDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadReservas();
   }
-
-  // src/app/features/recepcionista-dashboard/recepcionista-dashboard.component.ts
+  
   loadReservas(): void {
     this.reservaService.getReservasForRecepcionista().subscribe({
       next: (reservas) => {

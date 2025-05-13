@@ -67,7 +67,7 @@ export class ReservaService {
   }
 
   // Metodo para mostrar lista de reservas a RECEPCIONISTA.
-  recepcionistaApiUrl = `${environment.apiUrl}/api/admin/recepcionista/reservas`;
+  recepcionistaApiUrl = `${environment.apiUrl}/api/recepcionista/reservas`;
 
   getReservasForRecepcionista(): Observable<Reserva[]> {
     return this.http.get<Reserva[]>(this.recepcionistaApiUrl, { headers: this.getHeaders() }).pipe(
