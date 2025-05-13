@@ -1,0 +1,190 @@
+@use '../../../styles.scss' as styles;
+@use 'sass:color';
+
+.home-container {
+  padding: 0;
+  background-color: styles.$background; // Ivory
+}
+
+/* Carrusel */
+.carousel {
+  height: 80vh;
+  .carousel-inner {
+    height: 100%;
+    .carousel-item {
+      height: 100%;
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    .carousel-caption {
+      background: rgba(245, 255, 250, 0.8); // Mint Cream con opacidad
+      border-radius: 10px;
+      padding: 20px;
+      bottom: 20%;
+      h1 {
+        font-size: 2.5rem;
+        color: styles.$accent; // Lavender
+        margin-bottom: 15px;
+      }
+      p {
+        font-size: 1.2rem;
+        color: styles.$text; // Dark Gray
+        margin-bottom: 20px;
+      }
+      .cta-button {
+        font-size: 1.2rem;
+        padding: 10px 30px;
+        border-radius: 5px;
+        background-color: styles.$primary; // Medium Aquamarine
+        border-color: styles.$primary;
+        color: #fff;
+        transition: transform 0.3s ease;
+        &:hover {
+          transform: scale(1.05);
+          background-color: color.adjust(styles.$primary, $lightness: -10%);
+          border-color: color.adjust(styles.$primary, $lightness: -10%);
+        }
+      }
+    }
+  }
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%;
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: rgba(188, 143, 143, 0.5); // Rosy Brown con opacidad
+      border-radius: 50%;
+    }
+  }
+}
+
+/* Sección de Servicios */
+.services-section {
+  background-color: styles.$secondary; // Linen
+  padding: 60px 20px;
+  text-align: center;
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: styles.$accent; // Lavender
+  }
+  .service-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    max-width: 900px;
+    background-color: styles.$neutral; // Mint Cream
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+    overflow: hidden;
+    img {
+      width: 50%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .service-description {
+      padding: 20px;
+      text-align: left;
+      h3 {
+        font-size: 1.5rem;
+        color: styles.$accent; // Lavender
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 1rem;
+        color: styles.$text; // Dark Gray
+      }
+    }
+    &:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+/* Sección Sobre Nosotros */
+.about-section {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: styles.$background; // Ivory
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: styles.$accent; // Lavender
+  }
+  p {
+    font-size: 1.1rem;
+    color: styles.$text; // Dark Gray
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+/* Sección de Testimonios */
+.testimonials-section {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: styles.$secondary; // Linen
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: styles.$accent; // Lavender
+  }
+  .testimonials-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    .testimonial-card {
+      background-color: styles.$neutral; // Mint Cream
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+      width: 300px;
+      padding: 20px;
+      img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        object-fit: cover;
+      }
+      p {
+        font-style: italic;
+        color: styles.$text; // Dark Gray
+        margin-bottom: 10px;
+      }
+      h4 {
+        font-size: 1rem;
+        color: styles.$accent; // Lavender
+      }
+    }
+  }
+}
+
+/* Footer */
+.footer {
+  background-color: styles.$neutral; // Mint Cream
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
+  border-top: 1px solid styles.$border-shadow; // Rosy Brown
+  p {
+    margin: 5px 0;
+    color: styles.$text; // Dark Gray
+  }
+  .social-link {
+    color: styles.$primary; // Medium Aquamarine
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 1rem;
+    i {
+      font-size: 1.2rem;
+    }
+    &:hover {
+      color: color.adjust(styles.$primary, $lightness: -10%);
+      text-decoration: none;
+    }
+  }
+}

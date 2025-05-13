@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Aurea Spa</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Fuentes de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9BTV9LgifHrZwkkCvxp0Noich_Zaivng&libraries=places"></script>
+  </head>
+  <body>
+    <app-root></app-root>
+    <!-- Script para inicializar el mapa -->
+    <script>
+      let map;
+      let marker;
+      let geocoder;
+      const initialLocation = { lat: -27.4519, lng: -58.9867 }; // Coordenadas de French 414, Resistencia, Chaco, Argentina
+
+      function initMap() {
+        // Inicializar el mapa
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: initialLocation,
+          zoom: 15,
+        });
+
+        // Se añade un marcador en la ubicación inicial
+        marker = new google.maps.Marker({
+          position: initialLocation,
+          map: map,
+          title: "Aurea Spa",
+        });
+
+        // Inicializar el geocoder para búsqueda de direcciones
+        geocoder = new google.maps.Geocoder();
+
+        // Configurar la búsqueda de direcciones
+        const searchInput = document.getElementById("searchInput");
+        const autocomplete = new google.maps.places.Autocomplete(searchInput);
+        autocomplete.bindTo("bounds", map);
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) {
+            console.log("No se encontraron detalles para: ", place.name);
+            return;
+          }
+
+          // Centrar el mapa en la ubicación buscada
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(15);
+          }
+
+          // Mover el marcador a la nueva ubicación
+          marker.setPosition(place.geometry.location);
+        });
+      }
+
+      // Función para volver al punto original
+      function resetMap() {
+        map.setCenter(initialLocation);
+        map.setZoom(15);
+        marker.setPosition(initialLocation);
+      }
+
+      // Cargar el mapa cuando la ventana se haya cargado completamente
+      window.addEventListener("load", initMap);
+    </script>
+  </body>
+</html>

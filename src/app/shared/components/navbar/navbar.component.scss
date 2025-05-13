@@ -1,0 +1,107 @@
+@use '../../../../styles.scss' as styles;
+@use 'sass:color';
+
+.navbar {
+  background-color: styles.$neutral; // Mint Cream
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+  .navbar-brand {
+    color: styles.$accent; // Lavender
+    font-size: 1.5rem;
+    font-weight: bold;
+    img {
+      margin-right: 10px;
+    }
+    &:hover {
+      color: color.adjust(styles.$accent, $lightness: -10%);
+    }
+  }
+  .navbar-nav {
+    .nav-link {
+      color: styles.$text; // Dark Gray
+      font-size: 1.1rem;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+      &.admin-link, &.recepcionista-link {
+        color: styles.$primary; // Medium Aquamarine
+      }
+      &:hover {
+        color: styles.$primary; // Medium Aquamarine
+      }
+    }
+    .btn-primary {
+      background-color: styles.$primary; // Medium Aquamarine
+      border-color: styles.$primary;
+      &:hover {
+        background-color: color.adjust(styles.$primary, $lightness: -10%);
+        border-color: color.adjust(styles.$primary, $lightness: -10%);
+      }
+    }
+    .btn-accent {
+      background-color: styles.$primary; // Medium Aquamarine
+      border-color: styles.$primary;
+      color: #fff;
+      &:hover {
+        background-color: color.adjust(styles.$primary, $lightness: -10%);
+        border-color: color.adjust(styles.$primary, $lightness: -10%);
+      }
+    }
+  }
+}
+
+.modal-content {
+  background-color: styles.$background; // Ivory
+  border: 1px solid styles.$border-shadow; // Rosy Brown
+  .modal-header {
+    background-color: styles.$secondary; // Linen
+    border-bottom: 1px solid styles.$border-shadow; // Rosy Brown
+    .modal-title {
+      color: styles.$accent; // Lavender
+    }
+  }
+  .modal-body {
+    color: styles.$text; // Dark Gray
+    .social-link {
+      color: styles.$primary; // Medium Aquamarine
+      text-decoration: none;
+      margin: 0 10px;
+      i {
+        font-size: 1.2rem;
+      }
+      &:hover {
+        color: color.adjust(styles.$primary, $lightness: -10%);
+        text-decoration: none;
+      }
+    }
+    .btn-primary {
+      background-color: styles.$primary; // Medium Aquamarine
+      border-color: styles.$primary;
+      &:hover {
+        background-color: color.adjust(styles.$primary, $lightness: -10%);
+        border-color: color.adjust(styles.$primary, $lightness: -10%);
+      }
+    }
+  }
+  .modal-footer {
+    border-top: 1px solid styles.$border-shadow; // Rosy Brown
+    .btn-secondary {
+      background-color: styles.$text; // Dark Gray
+      border-color: styles.$text;
+      color: #fff;
+      &:hover {
+        background-color: color.adjust(styles.$text, $lightness: -10%);
+        border-color: color.adjust(styles.$text, $lightness: -10%);
+      }
+    }
+  }
+}
+
+.card {
+  border-color: styles.$border-shadow; // Rosy Brown
+  .card-title {
+    color: styles.$accent; // Lavender
+  }
+  .card-text {
+    color: styles.$text; // Dark Gray
+  }
+}

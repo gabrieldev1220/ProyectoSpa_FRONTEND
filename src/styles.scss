@@ -1,0 +1,45 @@
+@use 'sass:color';
+
+// Definir paleta de colores
+$primary: #66CDAA; // Medium Aquamarine (Botones/enlaces activos)
+$secondary: #FAF0E6; // Linen (Fondo secundario/secciones)
+$accent: #66CDAA; // Lavender (Títulos/énfasis suave)
+$neutral: #F5FFFA; // Mint Cream (Elementos destacados)
+$background: #FFFFE3; // Ivory (Fondo principal)
+$text: #4F4F4F; // Dark Gray (Texto principal)
+$border-shadow: #BC8F8F; // Rosy Brown (Bordes/sombras suaves)
+
+body {
+  background: $background;
+  background-size: cover;
+  font-family: 'Open Sans', sans-serif;
+  color: $text;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lora', serif;
+  color: $accent;
+}
+
+p, a, button, input, label {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  &:hover {
+    background-color: color.adjust($primary, $lightness: -10%);
+    border-color: color.adjust($primary, $lightness: -10%);
+  }
+}
+
+.btn-accent {
+  background-color: $primary;
+  border-color: $primary;
+  color: #fff;
+  &:hover {
+    background-color: color.adjust($primary, $lightness: -10%);
+    border-color: color.adjust($primary, $lightness: -10%);
+  }
+}

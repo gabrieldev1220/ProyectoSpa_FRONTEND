@@ -1,0 +1,42 @@
+@use '../../../styles.scss' as styles;
+@use 'sass:color';
+
+.container {
+  max-width: 1200px;
+  background-color: styles.$secondary; // Linen
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid styles.$border-shadow; // Rosy Brown
+}
+
+.title {
+  color: styles.$accent; // Lavender
+  font-family: 'Lora', serif;
+}
+
+.subtitle {
+  color: styles.$accent; // Lavender
+  font-family: 'Lora', serif;
+}
+
+.text-dark {
+  color: styles.$text; // Dark Gray
+}
+
+.table {
+  background-color: styles.$neutral; // Mint Cream
+  border: 1px solid styles.$border-shadow; // Rosy Brown
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.table-header {
+  background-color: styles.$primary; // Medium Aquamarine
+  color: #fff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: color.adjust(styles.$neutral, $lightness: -2%); // Slightly darker Mint Cream
+}

@@ -1,0 +1,80 @@
+<div class="container mt-4">
+  <h2 class="title">Gestionar Clientes</h2>
+
+  <!-- Formulario para crear/editar clientes -->
+  <div class="card mb-4 card-border">
+    <div class="card-body">
+      <h5 class="subtitle">{{ isEditing ? 'Editar Cliente' : 'Crear Cliente' }}</h5>
+      <form (ngSubmit)="onSubmit()" #clienteForm="ngForm">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="dni" class="form-label text-dark">DNI</label>
+            <input type="text" class="form-control" id="dni" [(ngModel)]="selectedCliente.dni" name="dni" required pattern="[0-9]+">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="nombre" class="form-label text-dark">Nombre</label>
+            <input type="text" class="form-control" id="nombre" [(ngModel)]="selectedCliente.nombre" name="nombre" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="apellido" class="form-label text-dark">Apellido</label>
+            <input type="text" class="form-control" id="apellido" [(ngModel)]="selectedCliente.apellido" name="apellido" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="email" class="form-label text-dark">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="selectedCliente.email" name="email" required email>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="telefono" class="form-label text-dark">Teléfono</label>
+            <input type="text" class="form-control" id="telefono" [(ngModel)]="selectedCliente.telefono" name="telefono" required pattern="[0-9]+">
+          </div>
+        </div>
+
+        <!-- Contenedor para alinear los botones de forma horizontal -->
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn btn-primary btn-custom" [disabled]="!clienteForm.valid">{{ isEditing ? 'Actualizar' : 'Crear' }}</button>
+          <a routerLink="/dashboard/admin" class="btn btn-primary btn-custom">
+            <i class="bi bi-arrow-left me-2"></i>Atrás
+          </a>
+          <button type="button" class="btn btn-secondary-custom" (click)="resetForm()" *ngIf="isEditing">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de clientes -->
+  <div class="card card-border">
+    <div class="card-body">
+      <h5 class="subtitle">Lista de Clientes</h5>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th class="text-dark">DNI</th>
+            <th class="text-dark">Nombre</th>
+            <th class="text-dark">Apellido</th>
+            <th class="text-dark">Email</th>
+            <th class="text-dark">Teléfono</th>
+            <th class="text-dark">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of clientes">
+            <td class="text-dark">{{ cliente.dni }}</td>
+            <td class="text-dark">{{ cliente.nombre }}</td>
+            <td class="text-dark">{{ cliente.apellido }}</td>
+            <td class="text-dark">{{ cliente.email }}</td>
+            <td class="text-dark">{{ cliente.telefono }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning-custom me-2" (click)="editCliente(cliente)">Editar</button>
+              <button class="btn btn-sm btn-danger-custom" (click)="deleteCliente(cliente.id!)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="clientes.length === 0">
+            <td colspan="6" class="text-center text-dark">No hay clientes registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

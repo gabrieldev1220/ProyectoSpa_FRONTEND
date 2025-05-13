@@ -1,0 +1,97 @@
+@use '../../../../src/styles.scss' as styles;
+@use 'sass:color';
+
+.container {
+  background-color: styles.$secondary; // Linen
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.title {
+  color: styles.$accent; // Lavender
+  font-family: 'Lora', serif;
+}
+
+.subtitle {
+  color: styles.$accent; // Lavender
+  font-family: 'Lora', serif;
+}
+
+.text-dark {
+  color: styles.$text; // Dark Gray
+}
+
+.card {
+  background-color: styles.$neutral; // Mint Cream
+  border: none;
+  box-shadow: 0 4px 8px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+}
+
+.card-border {
+  border: 1px solid styles.$border-shadow; // Rosy Brown
+}
+
+.form-control {
+  border-color: styles.$border-shadow; // Rosy Brown
+  &:focus {
+    border-color: styles.$accent; // Lavender
+    box-shadow: 0 0 5px rgba(230, 230, 250, 0.5); // Lavender shadow
+  }
+}
+
+.btn-custom {
+  background-color: styles.$primary; // Medium Aquamarine
+  border-color: styles.$primary;
+  color: #fff;
+  &:hover {
+    background-color: color.adjust(styles.$primary, $lightness: -10%);
+    border-color: color.adjust(styles.$primary, $lightness: -10%);
+  }
+}
+
+.btn-secondary-custom {
+  background-color: styles.$text; // Dark Gray
+  border-color: styles.$text;
+  color: #fff;
+  &:hover {
+    background-color: color.adjust(styles.$text, $lightness: -10%);
+    border-color: color.adjust(styles.$text, $lightness: -10%);
+  }
+}
+
+.btn-warning-custom {
+  background-color: color.adjust(styles.$accent, $lightness: -20%); // Darker Lavender
+  border-color: color.adjust(styles.$accent, $lightness: -20%);
+  color: #fff;
+  &:hover {
+    background-color: color.adjust(styles.$accent, $lightness: -30%);
+    border-color: color.adjust(styles.$accent, $lightness: -30%);
+  }
+}
+
+.btn-danger-custom {
+  background-color: color.adjust(styles.$border-shadow, $lightness: -20%); // Darker Rosy Brown
+  border-color: color.adjust(styles.$border-shadow, $lightness: -20%);
+  color: #fff;
+  &:hover {
+    background-color: color.adjust(styles.$border-shadow, $lightness: -30%);
+    border-color: color.adjust(styles.$border-shadow, $lightness: -30%);
+  }
+}
+
+.table {
+  th, td {
+    color: styles.$text; // Dark Gray
+    vertical-align: middle;
+  }
+}
+
+.modal-content {
+  background-color: styles.$neutral; // Mint Cream
+  border: 1px solid styles.$border-shadow; // Rosy Brown
+}
+
+.modal-header,
+.modal-footer {
+  border-color: styles.$border-shadow; // Rosy Brown
+}
