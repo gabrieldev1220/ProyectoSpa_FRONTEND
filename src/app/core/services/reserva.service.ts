@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { Reserva } from '../models/reserva';
 import { AuthService } from './auth.service';
 import { environment } from '@environments/environment';
@@ -44,9 +44,10 @@ export class ReservaService {
     );
   }
 
-  createReserva(reserva: any): Observable<ReservaResponse> { // Cambiamos el tipo de retorno
+  createReserva(reserva: any): Observable<Reserva> {
     return this.http.post<ReservaResponse>(this.apiUrl, reserva, { headers: this.getHeaders() }).pipe(
-      tap(response => console.log('Reserva creada:', response)),
+      map(response => response.data || response as unknown as Reserva), // Mapear la respuesta
+      tap(reserva => console.log('Reserva creada:', reserva)),
       catchError(error => {
         console.error('Error al crear reserva:', error);
         throw error;

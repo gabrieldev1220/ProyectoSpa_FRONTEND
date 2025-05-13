@@ -15,14 +15,13 @@ import { ToastrModule } from 'ngx-toastr'; // Importar ToastrModule
 // Componentes
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-
+import { RecepcionistaDashboardModule } from './features/recepcionista-dashboard/recepcionista-dashboard.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ReservaComponent,
-    
+    ReservaComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +30,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
     CoreModule,
     SharedModule,
     DashboardModule,
+    RecepcionistaDashboardModule,
     BrowserAnimationsModule, // Añadir BrowserAnimationsModule
     ToastrModule.forRoot({   // Configurar ToastrModule globalmente
       timeOut: 3000,         // Duración del toast (3 segundos)

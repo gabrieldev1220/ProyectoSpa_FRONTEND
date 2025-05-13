@@ -146,7 +146,7 @@ export class ReservaComponent implements OnInit {
     this.reservaService.createReserva(reserva).subscribe({
       next: (response) => {
         // Se tuiliza response.message si existe, o un mensaje por defecto
-        this.toastr.success(response.message || 'Reserva creada exitosamente.', 'Éxito');
+        this.toastr.success('Reserva creada exitosamente.', 'Éxito');
         this.router.navigate(['/']);
       },
       error: (error) => {

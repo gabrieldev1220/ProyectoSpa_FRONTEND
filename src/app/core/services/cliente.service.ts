@@ -11,6 +11,7 @@ import { environment } from '@environments/environment';
 })
 export class ClienteService {
   private apiUrl = `${environment.apiUrl}/api/admin/clientes`;
+  private recepcionistaApiUrl = `${environment.apiUrl}/api/recepcionista/clientes`;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
