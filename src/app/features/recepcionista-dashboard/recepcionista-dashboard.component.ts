@@ -66,7 +66,7 @@ export class RecepcionistaDashboardComponent implements OnInit {
   }
 
   loadEmpleados(): void {
-    this.empleadoService.getAllEmpleados().subscribe({
+    this.empleadoService.getEmpleadosForReservas().subscribe({
       next: (empleados) => {
         this.empleados = empleados;
       },

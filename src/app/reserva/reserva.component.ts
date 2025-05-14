@@ -113,7 +113,7 @@ export class ReservaComponent implements OnInit {
     }
 
     // Cargar la lista de empleados
-    this.empleadoService.getAllEmpleados().subscribe({
+    this.empleadoService.getEmpleadosForReservas().subscribe({
       next: (empleados) => {
         this.empleadosDisponibles = empleados;
         if (empleados.length > 0) {

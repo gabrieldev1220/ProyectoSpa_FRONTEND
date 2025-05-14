@@ -11,6 +11,7 @@ import { environment } from '@environments/environment';
 })
 export class EmpleadoService {
   private apiUrl = `${environment.apiUrl}/api/empleados`;
+  private reservasApiUrl = `${environment.apiUrl}/api/empleados/reservas`;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -29,6 +30,29 @@ export class EmpleadoService {
           error: error.error
         });
         let errorMessage = 'Error al cargar la lista de empleados. Por favor, intenta de nuevo más tarde.';
+        if (error.status === 403) {
+          errorMessage = 'No tienes permiso para acceder a la lista de empleados.';
+        } else if (error.status === 401) {
+          errorMessage = 'No estás autenticado. Por favor, inicia sesión nuevamente.';
+        } else if (error.status === 500) {
+          errorMessage = 'Error en el servidor. Por favor, contacta al administrador.';
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
+
+  getEmpleadosForReservas(): Observable<Empleado[]> {
+    console.log('Solicitando empleados para reservas desde:', this.reservasApiUrl);
+    return this.http.get<Empleado[]>(this.reservasApiUrl, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        console.error('Error al obtener la lista de empleados para reservas:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          error: error.error
+        });
+        let errorMessage = 'Error al cargar la lista de empleados para reservas. Por favor, intenta de nuevo más tarde.';
         if (error.status === 403) {
           errorMessage = 'No tienes permiso para acceder a la lista de empleados.';
         } else if (error.status === 401) {
