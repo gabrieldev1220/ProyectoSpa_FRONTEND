@@ -94,6 +94,7 @@ export class AuthService {
 
   isRecepcionista(): boolean {
     const rol = this.getRol();
+    console.log('Verificando isRecepcionista, rol:', rol);
     return rol === 'RECEPCIONISTA';
   }
 }

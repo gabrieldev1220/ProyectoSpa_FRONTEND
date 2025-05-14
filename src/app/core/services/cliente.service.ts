@@ -21,7 +21,9 @@ export class ClienteService {
   }
 
   getClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+    const url = this.authService.isRecepcionista() ? this.recepcionistaApiUrl : this.apiUrl;
+    console.log('URL usada para getClientes:', url); // Para depurar
+    return this.http.get<Cliente[]>(url, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error al obtener clientes:', error);
         throw error;
