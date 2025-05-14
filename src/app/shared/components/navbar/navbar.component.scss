@@ -1,107 +1,147 @@
 @use '../../../../styles.scss' as styles;
 @use 'sass:color';
 
+// Definimos los colores directamente según la paleta proporcionada
+$ivory: #FFFFF0;          // Fondo principal (Blanco marfil)
+$linen: #FAF0E6;          // Fondo secundario/secciones (Beige claro)
+$mint-cream: #F5FFFA;     // Elementos destacados (Verde menta suave)
+$medium-aquamarine: #66CDAA; // Botones o enlaces activos (Aguamarina)
+$lavender: #E6E6FA;       // Títulos o énfasis suave (Lavanda)
+$dark-gray: #4F4F4F;      // Texto principal (Gris cálido)
+$rosy-brown: #BC8F8F;     // Bordes/sombras suaves (Marrón suave)
+
 .navbar {
-  background-color: styles.$neutral; // Mint Cream
+  background-color: $ivory; // Fondo principal (Blanco marfil)
   padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+  box-shadow: 0 2px 4px rgba($rosy-brown, 0.2); // Sombra suave (Rosy Brown)
+  
   .navbar-brand {
-    color: styles.$accent; // Lavender
+    color: darken($lavender, 15%); // Títulos o énfasis suave (Lavanda)
     font-size: 1.5rem;
     font-weight: bold;
     img {
       margin-right: 10px;
     }
     &:hover {
-      color: color.adjust(styles.$accent, $lightness: -10%);
+      color: darken($lavender, 20%); // Oscurecer un poco al pasar el mouse
     }
   }
+
   .navbar-nav {
     .nav-link {
-      color: styles.$text; // Dark Gray
+      color: $dark-gray; // Texto principal (Gris cálido)
       font-size: 1.1rem;
       margin: 0 10px;
       transition: color 0.3s ease;
+      
       &.admin-link, &.recepcionista-link {
-        color: styles.$primary; // Medium Aquamarine
+        color: $medium-aquamarine; // Enlaces activos (Aguamarina)
       }
+      
       &:hover {
-        color: styles.$primary; // Medium Aquamarine
+        color: $medium-aquamarine; // Cambio de color al pasar el mouse (Aguamarina)
+      }
+      
+      &.active {
+        background-color: $mint-cream; // Elementos destacados (Verde menta suave)
+        border-radius: 5px;
+        padding: 5px 10px;
       }
     }
+
     .btn-primary {
-      background-color: styles.$primary; // Medium Aquamarine
-      border-color: styles.$primary;
-      &:hover {
-        background-color: color.adjust(styles.$primary, $lightness: -10%);
-        border-color: color.adjust(styles.$primary, $lightness: -10%);
-      }
-    }
-    .btn-accent {
-      background-color: styles.$primary; // Medium Aquamarine
-      border-color: styles.$primary;
+      background-color: $medium-aquamarine; // Botones (Aguamarina)
+      border-color: $medium-aquamarine;
       color: #fff;
       &:hover {
-        background-color: color.adjust(styles.$primary, $lightness: -10%);
-        border-color: color.adjust(styles.$primary, $lightness: -10%);
+        background-color: darken($medium-aquamarine, 10%);
+        border-color: darken($medium-aquamarine, 10%);
+      }
+    }
+
+    .btn-accent {
+      background-color: $medium-aquamarine; // Botones (Aguamarina)
+      border-color: $medium-aquamarine;
+      color: #fff;
+      &:hover {
+        background-color: darken($medium-aquamarine, 10%);
+        border-color: darken($medium-aquamarine, 10%);
       }
     }
   }
 }
 
 .modal-content {
-  background-color: styles.$background; // Ivory
-  border: 1px solid styles.$border-shadow; // Rosy Brown
+  background-color: $ivory; // Fondo principal (Blanco marfil)
+  border: 1px solid $rosy-brown; // Bordes (Rosy Brown)
+  
   .modal-header {
-    background-color: styles.$secondary; // Linen
-    border-bottom: 1px solid styles.$border-shadow; // Rosy Brown
+    background-color: $linen; // Fondo secundario (Beige claro)
+    border-bottom: 1px solid $rosy-brown; // Borde (Rosy Brown)
+    
     .modal-title {
-      color: styles.$accent; // Lavender
+      color: darken($lavender, 15%); // Títulos (Lavanda)
     }
   }
+
   .modal-body {
-    color: styles.$text; // Dark Gray
+    color: $dark-gray; // Texto principal (Gris cálido)
+    
     .social-link {
-      color: styles.$primary; // Medium Aquamarine
+      color: $medium-aquamarine; // Enlaces activos (Aguamarina)
       text-decoration: none;
       margin: 0 10px;
       i {
         font-size: 1.2rem;
       }
       &:hover {
-        color: color.adjust(styles.$primary, $lightness: -10%);
+        color: darken($medium-aquamarine, 10%);
         text-decoration: none;
       }
     }
+
     .btn-primary {
-      background-color: styles.$primary; // Medium Aquamarine
-      border-color: styles.$primary;
+      background-color: $medium-aquamarine; // Botones (Aguamarina)
+      border-color: $medium-aquamarine;
       &:hover {
-        background-color: color.adjust(styles.$primary, $lightness: -10%);
-        border-color: color.adjust(styles.$primary, $lightness: -10%);
+        background-color: darken($medium-aquamarine, 10%);
+        border-color: darken($medium-aquamarine, 10%);
       }
     }
   }
+
   .modal-footer {
-    border-top: 1px solid styles.$border-shadow; // Rosy Brown
+    border-top: 1px solid $rosy-brown; // Borde (Rosy Brown)
+    
     .btn-secondary {
-      background-color: styles.$text; // Dark Gray
-      border-color: styles.$text;
+      background-color: $dark-gray; // Texto principal como fondo (Gris cálido)
+      border-color: $dark-gray;
       color: #fff;
       &:hover {
-        background-color: color.adjust(styles.$text, $lightness: -10%);
-        border-color: color.adjust(styles.$text, $lightness: -10%);
+        background-color: darken($dark-gray, 10%);
+        border-color: darken($dark-gray, 10%);
       }
     }
   }
 }
 
 .card {
-  border-color: styles.$border-shadow; // Rosy Brown
+  border-color: $rosy-brown; // Borde (Rosy Brown)
+  
   .card-title {
-    color: styles.$accent; // Lavender
+    color: $lavender; // Títulos (Lavanda)
   }
+  
   .card-text {
-    color: styles.$text; // Dark Gray
+    color: $dark-gray; // Texto principal (Gris cálido)
+  }
+
+  .btn-primary {
+    background-color: $medium-aquamarine; // Botones (Aguamarina)
+    border-color: $medium-aquamarine;
+    &:hover {
+      background-color: darken($medium-aquamarine, 10%);
+      border-color: darken($medium-aquamarine, 10%);
+    }
   }
 }
