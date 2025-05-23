@@ -16,6 +16,7 @@ export class AdminEmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];
   newEmpleado: Empleado = { dni: '', nombre: '', apellido: '', email: '', password: '', telefono: '', rol: 'TERAPEUTA' };
   editingEmpleado: Empleado | null = null;
+  roles: string[] = [];
 
   constructor(
     private empleadoService: EmpleadoService,
@@ -24,12 +25,41 @@ export class AdminEmpleadosComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
+  formatRoleName(role: string): string {
+    return role
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
   ngOnInit(): void {
     if (!this.authService.isGerenteGeneral()) {
       this.router.navigate(['/dashboard']);
       return;
     }
     this.loadEmpleados();
+    this.loadRoles();
+  }
+
+  loadRoles(): void {
+    this.empleadoService.getAllRoles().subscribe({
+      next: (roles) => {
+        // Quitar el prefijo ROLE_ para mostrar en el formulario
+        this.roles = roles.map(role => role.replace('ROLE_', ''));
+        if (this.roles.length === 0) {
+          this.toastr.warning('No se encontraron roles disponibles.', 'Advertencia');
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.message || 'Error al cargar los roles.', 'Error');
+        console.error('Error al cargar roles:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
+      }
+    });
   }
 
   loadEmpleados(): void {
@@ -43,6 +73,9 @@ export class AdminEmpleadosComponent implements OnInit {
       error: (error) => {
         this.toastr.error(error.message || 'Error al cargar los empleados.', 'Error');
         console.error('Error al cargar empleados:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
       }
     });
   }
@@ -55,14 +88,21 @@ export class AdminEmpleadosComponent implements OnInit {
         this.newEmpleado = { dni: '', nombre: '', apellido: '', email: '', password: '', telefono: '', rol: 'TERAPEUTA' };
       },
       error: (error) => {
-        this.toastr.error('Error al crear el empleado.', 'Error');
+        this.toastr.error(error.message || 'Error al crear el empleado.', 'Error');
         console.error('Error al crear empleado:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
       }
     });
   }
 
   editEmpleado(empleado: Empleado): void {
     this.editingEmpleado = { ...empleado };
+    // Asegurarse de que el rol no tenga el prefijo ROLE_ al mostrarlo en el formulario
+    if (this.editingEmpleado.rol.startsWith('ROLE_')) {
+      this.editingEmpleado.rol = this.editingEmpleado.rol.replace('ROLE_', '');
+    }
     // Abrir el modal usando Bootstrap
     const modalElement = document.getElementById('editEmpleadoModal') as HTMLElement;
     if (modalElement) {
@@ -86,8 +126,11 @@ export class AdminEmpleadosComponent implements OnInit {
           }
         },
         error: (error) => {
-          this.toastr.error('Error al actualizar el empleado.', 'Error');
+          this.toastr.error(error.message || 'Error al actualizar el empleado.', 'Error');
           console.error('Error al actualizar empleado:', error);
+          if (error.message.includes('No estás autenticado')) {
+            this.authService.logout();
+          }
         }
       });
     }
@@ -98,11 +141,15 @@ export class AdminEmpleadosComponent implements OnInit {
       this.empleadoService.deleteEmpleado(id).subscribe({
         next: () => {
           this.toastr.success('Empleado eliminado exitosamente.', 'Éxito');
-          this.loadEmpleados();
+          // Actualizar el arreglo localmente eliminando el empleado con el ID correspondiente
+          this.empleados = this.empleados.filter(empleado => empleado.id !== id);          
         },
         error: (error) => {
-          this.toastr.error('Error al eliminar el empleado.', 'Error');
+          this.toastr.error(error.message || 'Error al eliminar el empleado.', 'Error');
           console.error('Error al eliminar empleado:', error);
+          if (error.message.includes('No estás autenticado')) {
+            this.authService.logout();
+          }
         }
       });
     }

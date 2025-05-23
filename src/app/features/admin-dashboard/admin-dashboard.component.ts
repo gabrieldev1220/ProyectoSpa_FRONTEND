@@ -14,7 +14,7 @@ export class AdminDashboardComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getRol();
+    this.userRole = this.authService.getPrimaryRole();
   }
 
   logout(): void {

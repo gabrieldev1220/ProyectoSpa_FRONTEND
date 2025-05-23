@@ -5,11 +5,18 @@ import { tap, catchError, map } from 'rxjs/operators';
 import { Reserva } from '../models/reserva';
 import { AuthService } from './auth.service';
 import { environment } from '@environments/environment';
+import { Servicio } from '../models/servicio';
 
 // Se define una interfaz para la respuesta del backend
 interface ReservaResponse {
   message?: string;
   data?: Reserva;
+}
+
+// Interfaz para la respuesta del endpoint /api/reservas/servicios
+interface ServicioResponse {
+  nombre: string;
+  descripcion: string;
 }
 
 @Injectable({
@@ -18,7 +25,8 @@ interface ReservaResponse {
 export class ReservaService {
   private apiUrl = `${environment.apiUrl}/api/clientes/reservas`;
   private adminApiUrl = `${environment.apiUrl}/api/admin/reservas`;
-  private serviciosUrl = `${environment.apiUrl}/api/servicios`;
+  private serviciosUrl = `${environment.apiUrl}/api/reservas/servicios`;
+  private clienteApiUrl = `${environment.apiUrl}/api/clientes`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -45,15 +53,23 @@ export class ReservaService {
   }
 
   createReserva(reserva: any): Observable<Reserva> {
-    return this.http.post<ReservaResponse>(this.apiUrl, reserva, { headers: this.getHeaders() }).pipe(
-      map(response => response.data || response as unknown as Reserva), // Mapear la respuesta
-      tap(reserva => console.log('Reserva creada:', reserva)),
-      catchError(error => {
-        console.error('Error al crear reserva:', error);
-        throw error;
-      })
-    );
-  }
+  return this.http.post<ReservaResponse>(this.apiUrl, reserva, { headers: this.getHeaders() }).pipe(
+    map(response => response.data || response as unknown as Reserva),
+    tap(reserva => console.log('Reserva creada:', reserva)),
+    catchError(error => {
+      console.error('Error al crear reserva:', error);
+      let errorMessage = 'Error al crear la reserva. Por favor, intenta de nuevo más tarde.';
+      if (error.status === 403) {
+        errorMessage = 'No tienes permiso para crear reservas.';
+      } else if (error.status === 400) {
+        errorMessage = 'Datos de la reserva inválidos. Verifica los campos e intenta nuevamente.';
+      } else if (error.status === 500) {
+        errorMessage = 'Error en el servidor. Por favor, contacta al administrador.';
+      }
+      return throwError(() => new Error(errorMessage));
+    })
+  );
+}
 
   // Métodos para los Administradores o empleados que tengan el rol de GERENTE_GENERAL
   getAllReservas(): Observable<Reserva[]> {
@@ -69,7 +85,6 @@ export class ReservaService {
 
   // Metodo para mostrar lista de reservas a RECEPCIONISTA.
   recepcionistaApiUrl = `${environment.apiUrl}/api/recepcionista/reservas`;
-
   getReservasForRecepcionista(): Observable<Reserva[]> {
     return this.http.get<Reserva[]>(this.recepcionistaApiUrl, { headers: this.getHeaders() }).pipe(
       catchError(error => {
@@ -80,16 +95,30 @@ export class ReservaService {
   }
 
   updateReserva(id: number, reserva: any): Observable<Reserva> {
-    return this.http.put<Reserva>(`${this.adminApiUrl}/${id}`, reserva, { headers: this.getHeaders() }).pipe(
+    const url = this.authService.isRecepcionista() ? `${this.recepcionistaApiUrl}/${id}` : `${this.adminApiUrl}/${id}`;
+    console.log('URL usada para updateReserva:', url); // Para depurar
+    return this.http.put<Reserva>(url, reserva, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error al actualizar reserva:', error);
-        throw error;
+        let errorMessage = 'Error al actualizar la reserva. Por favor, intenta de nuevo más tarde.';
+        if (error.status === 403) {
+          errorMessage = 'No tienes permiso para actualizar reservas.';
+        } else if (error.status === 400) {
+          errorMessage = 'Datos de la reserva inválidos. Verifica los campos e intenta nuevamente.';
+        } else if (error.status === 404) {
+          errorMessage = 'Reserva no encontrada.';
+        } else if (error.status === 500) {
+          errorMessage = 'Error en el servidor. Por favor, contacta al administrador.';
+        }
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
 
   deleteReserva(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.adminApiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
+    const url = this.authService.isRecepcionista() ? `${this.recepcionistaApiUrl}/${id}` : `${this.adminApiUrl}/${id}`;
+    console.log('URL usada para deleteReserva:', url); // Para depurar
+    return this.http.delete<void>(url, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error al eliminar reserva:', error);
         throw error;
@@ -97,11 +126,27 @@ export class ReservaService {
     );
   }
 
-  getServicios(): Observable<string[]> {
-    return this.http.get<string[]>(this.serviciosUrl, { headers: this.getHeaders() }).pipe(
+  getServicios(): Observable<{ nombre: string, enum: string }[]> {
+    return this.http.get<ServicioResponse[]>(this.serviciosUrl, { headers: this.getHeaders() }).pipe(
+      map(servicios => servicios.map(s => ({
+        nombre: s.descripcion, // Usar la descripción como nombre visible
+        enum: s.nombre // Usar el nombre como valor del enum
+      }))),
       tap(servicios => console.log('Servicios obtenidos:', servicios)),
       catchError(error => {
         console.error('Error al obtener servicios:', error);
+        throw error;
+      })
+    );
+  }
+
+  // Método alternativo para obtener solo los valores de enum como string[]
+  getServiciosEnums(): Observable<string[]> {
+    return this.http.get<ServicioResponse[]>(this.serviciosUrl, { headers: this.getHeaders() }).pipe(
+      map(servicios => servicios.map(s => s.nombre)),
+      tap(enums => console.log('Enums de servicios obtenidos:', enums)),
+      catchError(error => {
+        console.error('Error al obtener enums de servicios:', error);
         throw error;
       })
     );

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Aurea Spa</title>
+    <title>Sentirse Bien Spa</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -18,59 +18,90 @@
       let map;
       let marker;
       let geocoder;
-      const initialLocation = { lat: -27.4519, lng: -58.9867 }; // Coordenadas de French 414, Resistencia, Chaco, Argentina
+      const initialLocation = { lat: -27.451019416674846, lng: -58.97902631796916 }; // Coordenadas para French 414, Resistencia, Chaco, Argentina
 
       function initMap() {
-        // Inicializar el mapa
-        map = new google.maps.Map(document.getElementById("map"), {
-          center: initialLocation,
-          zoom: 15,
-        });
+        // Verificar si el contenedor del mapa existe
+        const mapElement = document.getElementById("map");
+        if (!mapElement) return;
 
-        // Se añade un marcador en la ubicación inicial
-        marker = new google.maps.Marker({
-          position: initialLocation,
-          map: map,
-          title: "Aurea Spa",
-        });
+        // Inicializar el mapa solo si no está inicializado
+        if (!map) {
+          map = new google.maps.Map(mapElement, {
+            center: initialLocation,
+            zoom: 15,
+          });
 
-        // Inicializar el geocoder para búsqueda de direcciones
-        geocoder = new google.maps.Geocoder();
+          // Añadir un marcador en la ubicación inicial
+          marker = new google.maps.Marker({
+            position: initialLocation,
+            map: map,
+            title: "Sentirse Bien Spa",
+          });
 
-        // Configurar la búsqueda de direcciones
-        const searchInput = document.getElementById("searchInput");
-        const autocomplete = new google.maps.places.Autocomplete(searchInput);
-        autocomplete.bindTo("bounds", map);
+          // Inicializar el geocoder para búsqueda de direcciones
+          geocoder = new google.maps.Geocoder();
 
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (!place.geometry) {
-            console.log("No se encontraron detalles para: ", place.name);
-            return;
+          // Configurar la búsqueda de direcciones
+          const searchInput = document.getElementById("searchInput");
+          if (searchInput) {
+            const autocomplete = new google.maps.places.Autocomplete(searchInput);
+            autocomplete.bindTo("bounds", map);
+
+            autocomplete.addListener("place_changed", () => {
+              const place = autocomplete.getPlace();
+              if (!place.geometry) {
+                console.log("No se encontraron detalles para: ", place.name);
+                return;
+              }
+
+              // Centrar el mapa en la ubicación buscada
+              if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+              } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(15);
+              }
+
+              // Mover el marcador a la nueva ubicación
+              marker.setPosition(place.geometry.location);
+            });
           }
-
-          // Centrar el mapa en la ubicación buscada
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(15);
-          }
-
-          // Mover el marcador a la nueva ubicación
-          marker.setPosition(place.geometry.location);
-        });
+        } else {
+          // Si el mapa ya está inicializado, centrarlo y ajustar el marcador
+          map.setCenter(initialLocation);
+          map.setZoom(15);
+          marker.setPosition(initialLocation);
+        }
       }
 
       // Función para volver al punto original
       function resetMap() {
-        map.setCenter(initialLocation);
-        map.setZoom(15);
-        marker.setPosition(initialLocation);
+        if (map && marker) {
+          map.setCenter(initialLocation);
+          map.setZoom(15);
+          marker.setPosition(initialLocation);
+        }
       }
 
-      // Cargar el mapa cuando la ventana se haya cargado completamente
-      window.addEventListener("load", initMap);
+      // Inicializar el mapa al abrir el modal
+      document.addEventListener("shown.bs.modal", function (event) {
+        const modalId = event.target.id;
+        if (modalId === "contactModal") {
+          initMap();
+          // Forzar el renderizado del mapa
+          google.maps.event.trigger(map, "resize");
+        }
+      });
+
+      // Limpiar el mapa al cerrar el modal (opcional para liberar recursos)
+      document.addEventListener("hidden.bs.modal", function (event) {
+        const modalId = event.target.id;
+        if (modalId === "contactModal" && map) {
+          map = null;
+          marker = null;
+        }
+      });
     </script>
   </body>
 </html>

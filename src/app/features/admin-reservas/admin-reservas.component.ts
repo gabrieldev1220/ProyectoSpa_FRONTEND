@@ -9,6 +9,17 @@ import { ToastrService } from 'ngx-toastr';
 import { Reserva } from '@core/models/reserva';
 import { Cliente } from '@core/models/cliente';
 import { Empleado } from '@core/models/empleado';
+import { Servicio } from '@core/models/servicio';
+
+// Interfaz para editingReserva
+interface EditingReserva {
+  id: number;
+  cliente: number; // ID del cliente
+  empleado: number; // ID del empleado
+  fechaReserva: string;
+  servicio: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-admin-reservas',
@@ -20,8 +31,28 @@ export class AdminReservasComponent implements OnInit {
   reservas: Reserva[] = [];
   clientes: Cliente[] = [];
   empleados: Empleado[] = [];
-  newReserva: any = { cliente: null, empleado: null, fechaReserva: '', servicio: '', status: 'PENDIENTE' };
-  editingReserva: any = null;
+  newReserva: Partial<Reserva> = { cliente: null, empleado: null, fechaReserva: '', servicio: '', status: 'PENDIENTE' };
+  editingReserva: EditingReserva | null = null;
+  serviciosList: Servicio[] = [];
+
+  private servicioMap: { [key: string]: { nombre: string; precio: number } } = {
+    ANTI_STRESS: { nombre: 'Anti-stress', precio: 5000 },
+    DESCONTRACTURANTE: { nombre: 'Descontracturantes', precio: 5500 },
+    PIEDRAS_CALIENTES: { nombre: 'Masajes con Piedras Calientes', precio: 6000 },
+    CIRCULATORIO: { nombre: 'Circulatorios', precio: 5200 },
+    LIFTING_PESTANAS: { nombre: 'Lifting de Pestañas', precio: 3500 },
+    DEPILACION_FACIAL: { nombre: 'Depilación Facial', precio: 2000 },
+    BELLEZA_MANOS_PIES: { nombre: ' Belleza de Manos y Pies', precio: 4000 },
+    PUNTA_DIAMANTE: { nombre: 'Punta de Diamante', precio: 4500 },
+    LIMPIEZA_PROFUNDA: { nombre: 'Limpieza Profunda + Hidratación', precio: 4800 },
+    CRIO_FRECUENCIA_FACIAL: { nombre: 'Crio Frecuencia Facial', precio: 6000 },
+    VELASLIM: { nombre: 'VelaSlim', precio: 7000 },
+    DERMOHEALTH: { nombre: 'DermoHealth', precio: 6500 },
+    CRIOFRECUENCIA: { nombre: 'Criofrecuencia', precio: 7500 },
+    ULTRACAVITACION: { nombre: 'Ultracavitación', precio: 6800 },
+    HIDROMASAJES: { nombre: 'Hidromasajes', precio: 3000 },
+    YOGA: { nombre: 'Yoga', precio: 2500 }
+  };
 
   constructor(
     private reservaService: ReservaService,
@@ -40,6 +71,22 @@ export class AdminReservasComponent implements OnInit {
     this.loadReservas();
     this.loadClientes();
     this.loadEmpleados();
+    this.loadServicios();
+  }
+
+  loadServicios(): void {
+    this.reservaService.getServicios().subscribe({
+      next: (servicios) => {
+        this.serviciosList = servicios.map(servicio => ({
+          ...servicio,
+          precio: this.servicioMap[servicio.enum]?.precio || 0 // Agregar precio desde servicioMap
+        }));
+      },
+      error: (error) => {
+        this.toastr.error('Error al cargar los servicios.', 'Error');
+        console.error('Error al cargar servicios:', error);
+      }
+    });
   }
 
   loadReservas(): void {
@@ -103,7 +150,14 @@ export class AdminReservasComponent implements OnInit {
   }
 
   editReserva(reserva: Reserva): void {
-    this.editingReserva = { ...reserva, cliente: reserva.cliente.id, empleado: reserva.empleado.id };
+    this.editingReserva = {
+      id: reserva.id,
+      cliente: reserva.cliente.id,
+      empleado: reserva.empleado.id,
+      fechaReserva: reserva.fechaReserva,
+      servicio: reserva.servicio,
+      status: reserva.status
+    };
     // Abrir el modal usando Bootstrap
     const modalElement = document.getElementById('editReservaModal') as HTMLElement;
     if (modalElement) {
@@ -113,6 +167,7 @@ export class AdminReservasComponent implements OnInit {
   }
 
   updateReserva(): void {
+    if (!this.editingReserva) return;
     const reservaData = {
       id: this.editingReserva.id,
       cliente: { id: this.editingReserva.cliente },

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { ReservaService } from '@core/services/reserva.service';
 import { EmpleadoService } from '@core/services/empleado.service';
+import { FacturaService } from '@core/services/factura.service';
+import { ClienteService } from '@core/services/cliente.service';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -18,8 +20,12 @@ export class ReservaComponent implements OnInit {
   empleadoId: number | null = null;
   clienteId: number | null = null;
   empleadosDisponibles: any[] = [];
+  reservaCreada: boolean = false;
+  ultimaReserva: any = null;
+  servicioDetails: { nombre: string, precio: number } | null = null;
+  clienteData: any = null;
 
-  // Lista de servicios (copiada de NavbarComponent)
+  // Lista de servicios
   serviciosIndividuales = [
     {
       categoria: 'Masajes',
@@ -76,21 +82,34 @@ export class ReservaComponent implements OnInit {
     private authService: AuthService,
     private reservaService: ReservaService,
     private empleadoService: EmpleadoService,
+    private facturaService: FacturaService,
+    private clienteService: ClienteService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit() {
-    // Combinar servicios individuales y grupales en una lista plana
-    this.serviciosList = [];
-    this.serviciosIndividuales.forEach(categoria => {
-      categoria.items.forEach(item => {
-        this.serviciosList.push({ nombre: item.nombre, enum: item.enum });
-      });
-    });
-    this.serviciosGrupales.forEach(categoria => {
-      categoria.items.forEach(item => {
-        this.serviciosList.push({ nombre: item.nombre, enum: item.enum });
-      });
+    // Cargar los servicios desde el backend
+    this.reservaService.getServicios().subscribe({
+      next: (servicios) => {
+        this.serviciosList = servicios;
+        this.toastr.success('Lista de servicios cargada correctamente.', 'Éxito');
+      },
+      error: (error) => {
+        console.error('Error al obtener servicios desde el backend:', error);
+        this.toastr.warning('No se pudieron cargar los servicios desde el servidor. Usando lista local como respaldo.', 'Advertencia');
+        // Fallback: Usar la lista estática si falla la solicitud al backend
+        this.serviciosList = [];
+        this.serviciosIndividuales.forEach(categoria => {
+          categoria.items.forEach(item => {
+            this.serviciosList.push({ nombre: item.nombre, enum: item.enum });
+          });
+        });
+        this.serviciosGrupales.forEach(categoria => {
+          categoria.items.forEach(item => {
+            this.serviciosList.push({ nombre: item.nombre, enum: item.enum });
+          });
+        });
+      }
     });
 
     // Cargar el servicio desde los query params (si existe)
@@ -129,6 +148,24 @@ export class ReservaComponent implements OnInit {
     });
   }
 
+  // Método para obtener el nombre y precio del servicio basado en el enum
+  private getServicioDetails(servicioEnum: string): { nombre: string, precio: number } | null {
+    let servicioItem = null;
+    // Buscar en servicios individuales
+    for (const categoria of this.serviciosIndividuales) {
+      servicioItem = categoria.items.find(item => item.enum === servicioEnum);
+      if (servicioItem) break;
+    }
+    // Si no se encuentra, buscar en servicios grupales
+    if (!servicioItem) {
+      for (const categoria of this.serviciosGrupales) {
+        servicioItem = categoria.items.find(item => item.enum === servicioEnum);
+        if (servicioItem) break;
+      }
+    }
+    return servicioItem ? { nombre: servicioItem.nombre, precio: servicioItem.precio } : null;
+  }
+
   hacerReserva() {
     if (!this.fechaReserva || !this.empleadoId || !this.clienteId || !this.servicio) {
       this.toastr.warning('Por favor, completa todos los campos requeridos.', 'Advertencia');
@@ -140,19 +177,61 @@ export class ReservaComponent implements OnInit {
       empleado: { id: this.empleadoId },
       fechaReserva: new Date(this.fechaReserva).toISOString(),
       servicio: this.servicio,
-      status: 'PENDIENTE'
+      status: 'CONFIRMADA'
     };
 
     this.reservaService.createReserva(reserva).subscribe({
       next: (response) => {
-        // Se tuiliza response.message si existe, o un mensaje por defecto
         this.toastr.success('Reserva creada exitosamente.', 'Éxito');
-        this.router.navigate(['/']);
+        this.ultimaReserva = reserva; // Almacenar la reserva creada
+
+        // Obtener detalles del servicio
+        this.servicioDetails = this.getServicioDetails(this.servicio!);
+        if (!this.servicioDetails) {
+          this.toastr.error('No se encontraron los detalles del servicio para generar la factura.', 'Error');
+          this.router.navigate(['/']);
+          return;
+        }
+
+        // Obtener datos del cliente
+        this.clienteService.getClienteByToken().subscribe({
+          next: (clienteData) => {
+            this.clienteData = {
+              nombre: clienteData.nombre || 'N/A',
+              apellido: clienteData.apellido || '',
+              dni: clienteData.dni || 'N/A',
+              email: clienteData.email || 'N/A'
+            };
+            this.reservaCreada = true; // Mostrar el botón de generar factura
+          },
+          error: (error) => {
+            this.toastr.error('Error al obtener los datos del cliente para la factura.', 'Error');
+            this.router.navigate(['/']);
+          }
+        });
       },
       error: (error) => {
         console.error('Error al crear la reserva:', error);
         this.toastr.error(error.error?.message || 'Error al crear la reserva. Por favor, intenta de nuevo.', 'Error');
       }
+    });
+  }
+
+  generarFactura() {
+    if (!this.ultimaReserva || !this.servicioDetails || !this.clienteData) {
+      this.toastr.error('No hay datos suficientes para generar la factura.', 'Error');
+      return;
+    }
+
+    this.facturaService.generateFactura(
+      this.ultimaReserva,
+      this.clienteData,
+      this.servicioDetails.nombre,
+      this.servicioDetails.precio
+    ).then((invoiceNumber) => {
+      this.toastr.success(`Factura ${invoiceNumber} generada y abierta.`, 'Éxito');
+    }).catch((error) => {
+      this.toastr.error(error.message || 'Error al generar la factura. Por favor, intenta de nuevo.', 'Error');
     });
   }
 }

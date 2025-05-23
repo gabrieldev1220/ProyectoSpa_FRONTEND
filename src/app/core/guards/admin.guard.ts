@@ -11,11 +11,11 @@ export class AdminGuard implements CanActivate {
   canActivate(): boolean {
     const isGerenteGeneral = this.authService.isGerenteGeneral();
     console.log('AdminGuard: ¿Es GERENTE_GENERAL?', isGerenteGeneral);
-    console.log('AdminGuard: Rol actual:', this.authService.getRol());
+    console.log('AdminGuard: Rol actual:', this.authService.getPrimaryRole());
     if (isGerenteGeneral) {
       return true;
     } else {
-      this.router.navigate(['/']); // Cambiar de /dashboard a /
+      this.router.navigate(['/']);
       return false;
     }
   }

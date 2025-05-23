@@ -1,110 +1,142 @@
 @use '../../../styles.scss' as styles;
-@use 'sass:color';
 
 .container {
-  max-width: 1200px;
-  background-color: styles.$secondary; // Linen
-  border-radius: 10px;
-  padding: 20px;
-  border: 1px solid styles.$border-shadow; // Rosy Brown
-}
-
-.title {
-  color: styles.$accent; // Lavender
-  font-family: 'Lora', serif;
-}
-
-.subtitle {
-  color: styles.$accent; // Lavender
-  font-family: 'Lora', serif;
-}
-
-.text-dark {
-  color: styles.$text; // Dark Gray
+  max-width: 1400px;
 }
 
 .card {
-  background-color: styles.$neutral; // Mint Cream
-  border: none;
-  box-shadow: 0 4px 8px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
-}
-
-.card-border {
-  border: 1px solid styles.$border-shadow; // Rosy Brown
-}
-
-.form-control {
-  border-color: styles.$border-shadow; // Rosy Brown
-  &:focus {
-    border-color: styles.$accent; // Lavender
-    box-shadow: 0 0 5px rgba(230, 230, 250, 0.5); // Lavender shadow
+  background-color: styles.$neutral;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(styles.$border-shadow, 0.3);
   }
 }
 
-.btn-custom {
-  background-color: styles.$primary; // Medium Aquamarine
-  border-color: styles.$primary;
-  color: #fff;
-  &:hover {
-    background-color: color.adjust(styles.$primary, $lightness: -10%);
-    border-color: color.adjust(styles.$primary, $lightness: -10%);
-  }
+.card-title {
+  color: styles.$accent;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
-.btn-secondary-custom {
-  background-color: styles.$text; // Dark Gray
-  border-color: styles.$text;
-  color: #fff;
-  &:hover {
-    background-color: color.adjust(styles.$text, $lightness: -10%);
-    border-color: color.adjust(styles.$text, $lightness: -10%);
-  }
-}
-
-.btn-warning-custom {
-  background-color: color.adjust(styles.$accent, $lightness: -20%); // Darker Lavender
-  border-color: color.adjust(styles.$accent, $lightness: -20%);
-  color: #fff;
-  &:hover {
-    background-color: color.adjust(styles.$accent, $lightness: -30%);
-    border-color: color.adjust(styles.$accent, $lightness: -30%);
-  }
-}
-
-.btn-danger-custom {
-  background-color: color.adjust(styles.$border-shadow, $lightness: -20%); // Darker Rosy Brown
-  border-color: color.adjust(styles.$border-shadow, $lightness: -20%);
-  color: #fff;
-  &:hover {
-    background-color: color.adjust(styles.$border-shadow, $lightness: -30%);
-    border-color: color.adjust(styles.$border-shadow, $lightness: -30%);
+.reservation-form {
+  label {
+    font-weight: 500;
+    color: styles.$text;
   }
 }
 
 .table {
-  background-color: styles.$neutral; // Mint Cream
-  border: 1px solid styles.$border-shadow; // Rosy Brown
-}
-
-.table th, .table td {
-  vertical-align: middle;
+  background-color: styles.$neutral;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .table-header {
-  background-color: styles.$primary; // Medium Aquamarine
+  background-color: styles.$primary;
   color: #fff;
+  th {
+    padding: 15px;
+    font-weight: 600;
+  }
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: color.adjust(styles.$neutral, $lightness: -2%); // Slightly darker Mint Cream
+.table td {
+  padding: 15px;
+  vertical-align: middle;
+  color: styles.$text;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(styles.$secondary, 0.5);
+}
+
+.badge {
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.btn-custom {
+  background-color: styles.$primary;
+  border-color: styles.$primary;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  &:hover {
+    background-color: styles.$primary-dark;
+    border-color: styles.$primary-dark;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-secondary-custom {
+  background-color: styles.$text;
+  border-color: styles.$text;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  &:hover {
+    background-color: styles.$text-dark;
+    border-color: styles.$text-dark;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-warning-custom {
+  background-color: styles.$warning;
+  border-color: styles.$warning;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  &:hover {
+    background-color: styles.$warning-dark;
+    border-color: styles.$warning-dark;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-danger-custom {
+  background-color: styles.$danger;
+  border-color: styles.$danger;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  &:hover {
+    background-color: styles.$danger-dark;
+    border-color: styles.$danger-dark;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-success {
+  background-color: styles.$success;
+  border-color: styles.$success;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  &:hover {
+    background-color: styles.$success-dark;
+    border-color: styles.$success-dark;
+    transform: translateY(-2px);
+  }
 }
 
 .modal-content {
-  background-color: styles.$neutral; // Mint Cream
-  border: 1px solid styles.$border-shadow; // Rosy Brown
+  background-color: styles.$neutral;
+  border-radius: 16px;
 }
 
 .modal-header,
 .modal-footer {
-  border-color: styles.$border-shadow; // Rosy Brown
+  border-color: styles.$border-shadow;
+  background-color: styles.$neutral;
 }

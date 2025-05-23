@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
   
 })
 export class DashboardComponent implements OnInit {
+  userRole: string | null = null;
   userType: string | null = null;
   reservas: Reserva[] = [];
   servicios: string[] = [];
@@ -40,7 +41,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userType = this.authService.getRol();
+    this.userRole = this.authService.getPrimaryRole();
     this.loadReservas();
     this.loadServicios();
     this.loadEmpleados();
@@ -88,7 +89,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadServicios(): void {
-    this.reservaService.getServicios().subscribe({
+    this.reservaService.getServiciosEnums().subscribe({
       next: (servicios) => {
         this.servicios = servicios;
       },
@@ -117,7 +118,7 @@ export class DashboardComponent implements OnInit {
     const clienteId = this.authService.getUserId();
     console.log('Cliente ID al intentar crear reserva:', clienteId);
     //console.log('Tipo de usuario:', this.authService.getTipoUsuario());
-    console.log('Rol del usuario:', this.authService.getRol());
+    console.log('Rol del usuario:', this.authService.getPrimaryRole());
     console.log('Token:', this.authService.getToken());
 
     if (!clienteId) {

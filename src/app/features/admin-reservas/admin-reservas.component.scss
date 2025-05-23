@@ -2,96 +2,147 @@
 @use 'sass:color';
 
 .container {
-  background-color: styles.$secondary; // Linen
-  border-radius: 10px;
+  max-width: 1400px;
+  background-color: styles.$background;
   padding: 20px;
-}
-
-.title {
-  color: styles.$accent; // Lavender
-  font-family: 'Lora', serif;
-}
-
-.subtitle {
-  color: styles.$accent; // Lavender
-  font-family: 'Lora', serif;
-}
-
-.text-dark {
-  color: styles.$text; // Dark Gray
+  border-radius: 16px;
 }
 
 .card {
-  background-color: styles.$neutral; // Mint Cream
-  border: none;
-  box-shadow: 0 4px 8px rgba(188, 143, 143, 0.2); // Rosy Brown shadow
+  background-color: styles.$neutral;
+  border-radius: 16px;
+  border: 1px solid styles.$border-shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(styles.$border-shadow, 0.3);
+  }
 }
 
-.card-border {
-  border: 1px solid styles.$border-shadow; // Rosy Brown
+.card-title {
+  color: styles.$accent;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
-.form-control {
-  border-color: styles.$border-shadow; // Rosy Brown
+.form-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: styles.$text;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid styles.$border-shadow;
+  padding: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   &:focus {
-    border-color: styles.$accent; // Lavender
-    box-shadow: 0 0 5px rgba(230, 230, 250, 0.5); // Lavender shadow
+    border-color: styles.$primary;
+    box-shadow: 0 0 8px rgba(styles.$primary, 0.2);
+    outline: none;
   }
 }
 
 .btn-custom {
-  background-color: styles.$primary; // Medium Aquamarine
+  background-color: styles.$primary;
   border-color: styles.$primary;
   color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   &:hover {
-    background-color: color.adjust(styles.$primary, $lightness: -10%);
-    border-color: color.adjust(styles.$primary, $lightness: -10%);
+    background-color: styles.$primary-dark;
+    border-color: styles.$primary-dark;
+    transform: translateY(-2px);
   }
 }
 
 .btn-secondary-custom {
-  background-color: styles.$text; // Dark Gray
+  background-color: styles.$text;
   border-color: styles.$text;
   color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   &:hover {
-    background-color: color.adjust(styles.$text, $lightness: -10%);
-    border-color: color.adjust(styles.$text, $lightness: -10%);
+    background-color: styles.$text-dark;
+    border-color: styles.$text-dark;
+    transform: translateY(-2px);
   }
 }
 
 .btn-warning-custom {
-  background-color: color.adjust(styles.$accent, $lightness: -20%); // Darker Lavender
-  border-color: color.adjust(styles.$accent, $lightness: -20%);
+  background-color: styles.$warning;
+  border-color: styles.$warning;
   color: #fff;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   &:hover {
-    background-color: color.adjust(styles.$accent, $lightness: -30%);
-    border-color: color.adjust(styles.$accent, $lightness: -30%);
+    background-color: styles.$warning-dark;
+    border-color: styles.$warning-dark;
+    transform: translateY(-2px);
   }
 }
 
 .btn-danger-custom {
-  background-color: color.adjust(styles.$border-shadow, $lightness: -20%); // Darker Rosy Brown
-  border-color: color.adjust(styles.$border-shadow, $lightness: -20%);
+  background-color: styles.$danger;
+  border-color: styles.$danger;
   color: #fff;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   &:hover {
-    background-color: color.adjust(styles.$border-shadow, $lightness: -30%);
-    border-color: color.adjust(styles.$border-shadow, $lightness: -30%);
+    background-color: styles.$danger-dark;
+    border-color: styles.$danger-dark;
+    transform: translateY(-2px);
   }
 }
 
 .table {
-  th, td {
-    color: styles.$text; // Dark Gray
-    vertical-align: middle;
+  background-color: styles.$neutral;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-header {
+  background-color: styles.$primary;
+  color: #fff;
+  th {
+    padding: 15px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
   }
 }
 
+.table td {
+  padding: 15px;
+  vertical-align: middle;
+  font-family: 'Inter', sans-serif;
+  color: styles.$text;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(styles.$secondary, 0.5);
+}
+
 .modal-content {
-  background-color: styles.$neutral; // Mint Cream
-  border: 1px solid styles.$border-shadow; // Rosy Brown
+  background-color: styles.$neutral;
+  border-radius: 16px;
+  border: 1px solid styles.$border-shadow;
 }
 
 .modal-header,
 .modal-footer {
-  border-color: styles.$border-shadow; // Rosy Brown
+  border-color: styles.$border-shadow;
+  background-color: styles.$neutral;
 }

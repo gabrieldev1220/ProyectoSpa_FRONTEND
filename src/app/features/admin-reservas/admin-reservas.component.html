@@ -1,52 +1,37 @@
-<div class="container my-5">
-  <h1 class="text-center mb-4 title">Gestión de Reservas</h1>
-  
+<div class="container mt-5">
+  <h1 class="card-title text-center mb-4">Gestión de Reservas</h1>
+
   <!-- Formulario para Crear Reserva -->
   <div class="card mb-4 shadow-sm card-border">
     <div class="card-body">
-      <h5 class="subtitle">Agregar Nueva Reserva</h5>
+      <h5 class="card-title">Agregar Nueva Reserva</h5>
       <form (ngSubmit)="createReserva()">
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label for="cliente" class="form-label text-dark">Cliente</label>
-            <select class="form-control" id="cliente" [(ngModel)]="newReserva.cliente" name="cliente" required>
+            <label for="cliente" class="form-label">Cliente</label>
+            <select class="form-select" id="cliente" [(ngModel)]="newReserva.cliente" name="cliente" required>
               <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }} {{ cliente.apellido }}</option>
             </select>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="empleado" class="form-label text-dark">Empleado</label>
-            <select class="form-control" id="empleado" [(ngModel)]="newReserva.empleado" name="empleado" required>
+            <label for="empleado" class="form-label">Empleado</label>
+            <select class="form-select" id="empleado" [(ngModel)]="newReserva.empleado" name="empleado" required>
               <option *ngFor="let empleado of empleados" [value]="empleado.id">{{ empleado.nombre }} {{ empleado.apellido }}</option>
             </select>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="fechaReserva" class="form-label text-dark">Fecha y Hora</label>
+            <label for="fechaReserva" class="form-label">Fecha y Hora</label>
             <input type="datetime-local" class="form-control" id="fechaReserva" [(ngModel)]="newReserva.fechaReserva" name="fechaReserva" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="servicio" class="form-label text-dark">Servicio</label>
-            <select class="form-control" id="servicio" [(ngModel)]="newReserva.servicio" name="servicio" required>
-              <option value="ANTI_STRESS">Anti-stress</option>
-              <option value="DESCONTRACTURANTE">Descontracturantes</option>
-              <option value="PIEDRAS_CALIENTES">Masajes con Piedras Calientes</option>
-              <option value="CIRCULATORIO">Circulatorios</option>
-              <option value="LIFTING_PESTANAS">Lifting de Pestañas</option>
-              <option value="DEPILACION_FACIAL">Depilación Facial</option>
-              <option value="BELLEZA_MANOS_PIES">Belleza de Manos y Pies</option>
-              <option value="PUNTA_DIAMANTE">Punta de Diamante</option>
-              <option value="LIMPIEZA_PROFUNDA">Limpieza Profunda + Hidratación</option>
-              <option value="CRIO_FRECUENCIA_FACIAL">Crio Frecuencia Facial</option>
-              <option value="VELASLIM">VelaSlim</option>
-              <option value="DERMOHEALTH">DermoHealth</option>
-              <option value="CRIOFRECUENCIA">Criofrecuencia</option>
-              <option value="ULTRACAVITACION">Ultracavitación</option>
-              <option value="HIDROMASAJES">Hidromasajes</option>
-              <option value="YOGA">Yoga</option>
+            <label for="servicio" class="form-label">Servicio</label>
+            <select class="form-select" id="servicio" [(ngModel)]="newReserva.servicio" name="servicio" required>
+              <option *ngFor="let servicio of serviciosList" [value]="servicio.enum">{{ servicio.nombre }}</option>
             </select>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="status" class="form-label text-dark">Estado</label>
-            <select class="form-control" id="status" [(ngModel)]="newReserva.status" name="status" required>
+            <label for="status" class="form-label">Estado</label>
+            <select class="form-select" id="status" [(ngModel)]="newReserva.status" name="status" required>
               <option value="PENDIENTE">Pendiente</option>
               <option value="CONFIRMADA">Confirmada</option>
               <option value="CANCELADA">Cancelada</option>
@@ -55,7 +40,7 @@
           </div>
         </div>
 
-        <!-- Contenedor para alinear los botones de forma horizontal -->
+        <!-- Botones -->
         <div class="d-flex gap-3">
           <button type="submit" class="btn btn-primary btn-custom">Agregar Reserva</button>
           <a routerLink="/dashboard/admin" class="btn btn-secondary-custom">
@@ -65,28 +50,29 @@
       </form>
     </div>
   </div>
-  
+
   <!-- Lista de Reservas -->
-  <div class="row">
-    <div class="col-12">
-      <table class="table table-bordered">
-        <thead>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Lista de Reservas</h5>
+      <table class="table table-hover table-bordered">
+        <thead class="table-header">
           <tr>
-            <th class="text-dark">Cliente</th>
-            <th class="text-dark">Empleado</th>
-            <th class="text-dark">Fecha y Hora</th>
-            <th class="text-dark">Servicio</th>
-            <th class="text-dark">Estado</th>
-            <th class="text-dark">Acciones</th>
+            <th>Cliente</th>
+            <th>Empleado</th>
+            <th>Fecha y Hora</th>
+            <th>Servicio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let reserva of reservas">
-            <td class="text-dark">{{ reserva.cliente.nombre }} {{ reserva.cliente.apellido }}</td>
-            <td class="text-dark">{{ reserva.empleado.nombre }} {{ reserva.empleado.apellido }}</td>
-            <td class="text-dark">{{ reserva.fechaReserva }}</td>
-            <td class="text-dark">{{ reserva.servicio }}</td>
-            <td class="text-dark">{{ reserva.status }}</td>
+            <td>{{ reserva.cliente.nombre }} {{ reserva.cliente.apellido }}</td>
+            <td>{{ reserva.empleado.nombre }} {{ reserva.empleado.apellido }}</td>
+            <td>{{ reserva.fechaReserva }}</td>
+            <td>{{ reserva.servicio }}</td>
+            <td>{{ reserva.status }}</td>
             <td>
               <button class="btn btn-sm btn-warning-custom me-2" (click)="editReserva(reserva)">Editar</button>
               <button class="btn btn-sm btn-danger-custom" (click)="deleteReserva(reserva.id)">Eliminar</button>
@@ -96,57 +82,42 @@
       </table>
     </div>
   </div>
-  
+
   <!-- Modal para Editar Reserva -->
   <div class="modal fade" id="editReservaModal" tabindex="-1" aria-labelledby="editReservaModalLabel" aria-hidden="true" *ngIf="editingReserva">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title subtitle" id="editReservaModalLabel">Editar Reserva</h5>
+          <h5 class="modal-title card-title" id="editReservaModalLabel">Editar Reserva</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="updateReserva()">
             <div class="mb-3">
-              <label for="editCliente" class="form-label text-dark">Cliente</label>
-              <select class="form-control" id="editCliente" [(ngModel)]="editingReserva.cliente" name="editCliente" required>
+              <label for="editCliente" class="form-label">Cliente</label>
+              <select class="form-select" id="editCliente" [(ngModel)]="editingReserva.cliente" name="editCliente" required>
                 <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }} {{ cliente.apellido }}</option>
               </select>
             </div>
             <div class="mb-3">
-              <label for="editEmpleado" class="form-label text-dark">Empleado</label>
-              <select class="form-control" id="editEmpleado" [(ngModel)]="editingReserva.empleado" name="editEmpleado" required>
+              <label for="editEmpleado" class="form-label">Empleado</label>
+              <select class="form-select" id="editEmpleado" [(ngModel)]="editingReserva.empleado" name="editEmpleado" required>
                 <option *ngFor="let empleado of empleados" [value]="empleado.id">{{ empleado.nombre }} {{ empleado.apellido }}</option>
               </select>
             </div>
             <div class="mb-3">
-              <label for="editFechaReserva" class="form-label text-dark">Fecha y Hora</label>
+              <label for="editFechaReserva" class="form-label">Fecha y Hora</label>
               <input type="datetime-local" class="form-control" id="editFechaReserva" [(ngModel)]="editingReserva.fechaReserva" name="editFechaReserva" required>
             </div>
             <div class="mb-3">
-              <label for="editServicio" class="form-label text-dark">Servicio</label>
-              <select class="form-control" id="editServicio" [(ngModel)]="editingReserva.servicio" name="editServicio" required>
-                <option value="ANTI_STRESS">Anti-stress</option>
-                <option value="DESCONTRACTURANTE">Descontracturantes</option>
-                <option value="PIEDRAS_CALIENTES">Masajes con Piedras Calientes</option>
-                <option value="CIRCULATORIO">Circulatorios</option>
-                <option value="LIFTING_PESTANAS">Lifting de Pestañas</option>
-                <option value="DEPILACION_FACIAL">Depilación Facial</option>
-                <option value="BELLEZA_MANOS_PIES">Belleza de Manos y Pies</option>
-                <option value="PUNTA_DIAMANTE">Punta de Diamante</option>
-                <option value="LIMPIEZA_PROFUNDA">Limpieza Profunda + Hidratación</option>
-                <option value="CRIO_FRECUENCIA_FACIAL">Crio Frecuencia Facial</option>
-                <option value="VELASLIM">VelaSlim</option>
-                <option value="DERMOHEALTH">DermoHealth</option>
-                <option value="CRIOFRECUENCIA">Criofrecuencia</option>
-                <option value="ULTRACAVITACION">Ultracavitación</option>
-                <option value="HIDROMASAJES">Hidromasajes</option>
-                <option value="YOGA">Yoga</option>
+              <label for="editServicio" class="form-label">Servicio</label>
+              <select class="form-select" id="editServicio" [(ngModel)]="editingReserva.servicio" name="editServicio" required>
+                <option *ngFor="let servicio of serviciosList" [value]="servicio.enum">{{ servicio.nombre }}</option>
               </select>
             </div>
             <div class="mb-3">
-              <label for="editStatus" class="form-label text-dark">Estado</label>
-              <select class="form-control" id="editStatus" [(ngModel)]="editingReserva.status" name="editStatus" required>
+              <label for="editStatus" class="form-label">Estado</label>
+              <select class="form-select" id="editStatus" [(ngModel)]="editingReserva.status" name="editStatus" required>
                 <option value="PENDIENTE">Pendiente</option>
                 <option value="CONFIRMADA">Confirmada</option>
                 <option value="CANCELADA">Cancelada</option>

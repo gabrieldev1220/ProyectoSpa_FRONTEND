@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
-      <img src="assets/images/logo.png" alt="Aurea Spa" width="50">
+      <img src="assets/images/logo.png" alt="Sentirse Bien" width="50">
       Sentirse Bien
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/">Inicio</a>
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">Nosotros</a>
@@ -22,17 +22,17 @@
           <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#serviciosModal">Servicios</a>
         </li>
         <li class="nav-item" *ngIf="(isLoggedIn$ | async)">
-          <a class="nav-link" routerLink="/reserva">Reserva</a>
+          <a class="nav-link" routerLink="/reserva" routerLinkActive="active">Reserva</a>
         </li>
         <!-- Enlace para Administradores -->
         <li class="nav-item" *ngIf="(isLoggedIn$ | async) && authService.isGerenteGeneral()">
-          <a class="nav-link admin-link" routerLink="/dashboard/admin">
+          <a class="nav-link admin-link" routerLink="/dashboard/admin" routerLinkActive="active">
             <i class="fas fa-user-shield me-1"></i>Administración
           </a>
         </li>
         <!-- Enlace para Recepcionista -->
         <li class="nav-item" *ngIf="(isLoggedIn$ | async) && authService.isRecepcionista()">
-          <a class="nav-link recepcionista-link" routerLink="/dashboard/recepcionista">Recepcionista</a>
+          <a class="nav-link recepcionista-link" routerLink="/dashboard/recepcionista" routerLinkActive="active">Recepcionista</a>
         </li> 
         <!-- Enlace para Login-->
         <li class="nav-item" *ngIf="!(isLoggedIn$ | async)">
@@ -59,7 +59,7 @@
         </div>
         <div class="modal-body">
           <p>En Sentirse Bien, nos dedicamos a ofrecer un refugio de paz y bienestar en el corazón de Resistencia, Chaco. Nuestro objetivo es que cada visita sea una experiencia rejuvenecedora para tu cuerpo y mente. Contamos con un equipo de profesionales apasionados que brindan servicios personalizados, desde masajes relajantes hasta tratamientos faciales y corporales de alta calidad.</p>
-          <p>Fundado en 2021, Sentirse Bien se ha convertido en un lugar favorito para quienes buscan desconectar del estrés diario y reconectar consigo mismos. Utilizamos productos naturales y técnicas avanzadas para garantizar resultados excepcionales en un ambiente sereno y acogedor.</p>
+          <p>Fundado en 2021 por la de la Dra. Ana Felicidad, Sentirse Bien se ha convertido en un lugar favorito para quienes buscan desconectar del estrés diario y reconectar consigo mismos. Utilizamos productos naturales y técnicas avanzadas para garantizar resultados excepcionales en un ambiente sereno y acogedor.</p>
           <p>¡Te invitamos a visitarnos y descubrir el poder de la relajación!</p>
         </div>
         <div class="modal-footer">
@@ -130,7 +130,7 @@
           </div>
 
           <!-- Servicios Grupales -->
-          <h2 class="mb-3 mt-5">Servicios Grupales</h2>
+          <h2 class="mb-3 mt-5"></h2>
           <div *ngFor="let categoria of serviciosGrupales">
             <h3 class="mb-3">{{ categoria.categoria }}</h3>
             <div class="row">

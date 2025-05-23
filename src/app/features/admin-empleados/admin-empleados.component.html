@@ -1,80 +1,79 @@
-<div class="container my-5">
-  <h1 class="text-center mb-4 title">Gestión de Empleados</h1>
-  
+<div class="container mt-5">
+  <h1 class="card-title text-center mb-4">Gestión de Empleados</h1>
+
   <!-- Formulario para Crear Empleado -->
   <div class="card mb-4 shadow-sm card-border">
     <div class="card-body">
-      <h5 class="subtitle">Agregar Nuevo Empleado</h5>
+      <h5 class="card-title">Agregar Nuevo Empleado</h5>
       <form (ngSubmit)="createEmpleado()">
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label for="dni" class="form-label text-dark">DNI</label>
+            <label for="dni" class="form-label">DNI</label>
             <input type="text" class="form-control" id="dni" [(ngModel)]="newEmpleado.dni" name="dni" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="nombre" class="form-label text-dark">Nombre</label>
+            <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" [(ngModel)]="newEmpleado.nombre" name="nombre" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="apellido" class="form-label text-dark">Apellido</label>
+            <label for="apellido" class="form-label">Apellido</label>
             <input type="text" class="form-control" id="apellido" [(ngModel)]="newEmpleado.apellido" name="apellido" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="email" class="form-label text-dark">Email</label>
+            <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" [(ngModel)]="newEmpleado.email" name="email" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="password" class="form-label text-dark">Contraseña</label>
+            <label for="password" class="form-label">Contraseña</label>
             <input type="password" class="form-control" id="password" [(ngModel)]="newEmpleado.password" name="password" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="telefono" class="form-label text-dark">Teléfono</label>
+            <label for="telefono" class="form-label">Teléfono</label>
             <input type="text" class="form-control" id="telefono" [(ngModel)]="newEmpleado.telefono" name="telefono" required>
           </div>
           <div class="col-md-4 mb-3">
-            <label for="rol" class="form-label text-dark">Rol</label>
-            <select class="form-control" id="rol" [(ngModel)]="newEmpleado.rol" name="rol" required>
-              <option value="GERENTE_GENERAL">Gerente General</option>
-              <option value="RECEPCIONISTA">Recepcionista</option>
-              <option value="TERAPEUTA">Terapeuta</option>
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" [(ngModel)]="newEmpleado.rol" name="rol" required>
+              <option *ngFor="let role of roles" [value]="role">{{ formatRoleName(role) }}</option>
             </select>
           </div>
         </div>
 
-        <!-- Contenedor para alinear los botones de forma horizontal -->
+        <!-- Botones -->
         <div class="d-flex gap-3">
           <button type="submit" class="btn btn-primary btn-custom">Agregar Empleado</button>
           <a routerLink="/dashboard/admin" class="btn btn-secondary-custom">
             <i class="bi bi-arrow-left me-2"></i>Atrás
           </a>
-        </div>          
+        </div>
       </form>
     </div>
   </div>
-  
+
   <!-- Lista de Empleados -->
-  <div class="row">
-    <div class="col-12">
-      <table class="table table-bordered">
-        <thead>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Lista de Empleados</h5>
+      <table class="table table-hover table-bordered">
+        <thead class="table-header">
           <tr>
-            <th class="text-dark">DNI</th>
-            <th class="text-dark">Nombre</th>
-            <th class="text-dark">Apellido</th>
-            <th class="text-dark">Email</th>
-            <th class="text-dark">Teléfono</th>
-            <th class="text-dark">Rol</th>
-            <th class="text-dark">Acciones</th>
+            <th>DNI</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let empleado of empleados">
-            <td class="text-dark">{{ empleado.dni }}</td>
-            <td class="text-dark">{{ empleado.nombre }}</td>
-            <td class="text-dark">{{ empleado.apellido }}</td>
-            <td class="text-dark">{{ empleado.email }}</td>
-            <td class="text-dark">{{ empleado.telefono }}</td>
-            <td class="text-dark">{{ empleado.rol }}</td>
+            <td>{{ empleado.dni }}</td>
+            <td>{{ empleado.nombre }}</td>
+            <td>{{ empleado.apellido }}</td>
+            <td>{{ empleado.email }}</td>
+            <td>{{ empleado.telefono }}</td>
+            <td>{{ formatRoleName(empleado.rol.replace('ROLE_', '')) }}</td>
             <td>
               <button class="btn btn-sm btn-warning-custom me-2" (click)="editEmpleado(empleado)">Editar</button>
               <button class="btn btn-sm btn-danger-custom" (click)="deleteEmpleado(empleado.id)">Eliminar</button>
@@ -84,47 +83,45 @@
       </table>
     </div>
   </div>
-  
+
   <!-- Modal para Editar Empleado -->
   <div class="modal fade" id="editEmpleadoModal" tabindex="-1" aria-labelledby="editEmpleadoModalLabel" aria-hidden="true" *ngIf="editingEmpleado">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title subtitle" id="editEmpleadoModalLabel">Editar Empleado</h5>
+          <h5 class="modal-title card-title" id="editEmpleadoModalLabel">Editar Empleado</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form (ngSubmit)="updateEmpleado()">
             <div class="mb-3">
-              <label for="editDni" class="form-label text-dark">DNI</label>
+              <label for="editDni" class="form-label">DNI</label>
               <input type="text" class="form-control" id="editDni" [(ngModel)]="editingEmpleado.dni" name="editDni" required>
             </div>
             <div class="mb-3">
-              <label for="editNombre" class="form-label text-dark">Nombre</label>
+              <label for="editNombre" class="form-label">Nombre</label>
               <input type="text" class="form-control" id="editNombre" [(ngModel)]="editingEmpleado.nombre" name="editNombre" required>
             </div>
             <div class="mb-3">
-              <label for="editApellido" class="form-label text-dark">Apellido</label>
+              <label for="editApellido" class="form-label">Apellido</label>
               <input type="text" class="form-control" id="editApellido" [(ngModel)]="editingEmpleado.apellido" name="editApellido" required>
             </div>
             <div class="mb-3">
-              <label for="editEmail" class="form-label text-dark">Email</label>
+              <label for="editEmail" class="form-label">Email</label>
               <input type="email" class="form-control" id="editEmail" [(ngModel)]="editingEmpleado.email" name="editEmail" required>
             </div>
             <div class="mb-3">
-              <label for="editPassword" class="form-label text-dark">Contraseña (dejar en blanco para no cambiar)</label>
+              <label for="editPassword" class="form-label">Contraseña (dejar en blanco para no cambiar)</label>
               <input type="password" class="form-control" id="editPassword" [(ngModel)]="editingEmpleado.password" name="editPassword">
             </div>
             <div class="mb-3">
-              <label for="editTelefono" class="form-label text-dark">Teléfono</label>
+              <label for="editTelefono" class="form-label">Teléfono</label>
               <input type="text" class="form-control" id="editTelefono" [(ngModel)]="editingEmpleado.telefono" name="editTelefono" required>
             </div>
             <div class="mb-3">
-              <label for="editRol" class="form-label text-dark">Rol</label>
-              <select class="form-control" id="editRol" [(ngModel)]="editingEmpleado.rol" name="editRol" required>
-                <option value="GERENTE_GENERAL">Gerente General</option>
-                <option value="RECEPCIONISTA">Recepcionista</option>
-                <option value="TERAPEUTA">Terapeuta</option>
+              <label for="editRol" class="form-label">Rol</label>
+              <select class="form-select" id="editRol" [(ngModel)]="editingEmpleado.rol" name="editRol" required>
+                <option *ngFor="let role of roles" [value]="role">{{ formatRoleName(role) }}</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary btn-custom w-100">Actualizar Empleado</button>

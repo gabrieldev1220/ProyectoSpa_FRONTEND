@@ -11,12 +11,28 @@ import { environment } from '@environments/environment';
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/auth`;
   private tokenKey = 'auth-token';
-  private userIdKey = 'user-id'; // Cambiar de clienteIdKey a userIdKey
-  private rolKey = 'rol'; // Mantener rolKey
+  private userIdKey = 'user-id';
+  private rolesSubject = new BehaviorSubject<string[]>([]); // Almacena los roles
+  roles$ = this.rolesSubject.asObservable(); // Observable para los roles
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    // Cargar el token y los roles del localStorage al inicializar
+    this.loadAuthData();
+  }
+
+  private loadAuthData(): void {
+    const token = localStorage.getItem(this.tokenKey);
+    const userId = localStorage.getItem(this.userIdKey);
+    if (token) {
+      localStorage.setItem(this.tokenKey, token);
+      localStorage.setItem(this.userIdKey, userId || '');
+      const roles = this.extractRolesFromToken(token);
+      this.rolesSubject.next(roles);
+      this.isLoggedInSubject.next(true);
+    }
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
@@ -30,13 +46,13 @@ export class AuthService {
           } else {
             console.error('No se encontró userId en la respuesta del login');
           }
-          if (response.rol) {
-            localStorage.setItem(this.rolKey, response.rol);
-          }
+          // Extraer los roles del token y actualizar el BehaviorSubject
+          const roles = this.extractRolesFromToken(response.jwt);
+          this.rolesSubject.next(roles);
           console.log('Datos almacenados en localStorage:', {
             token: localStorage.getItem(this.tokenKey),
             userId: localStorage.getItem(this.userIdKey),
-            rol: localStorage.getItem(this.rolKey)
+            roles: roles
           });
           this.isLoggedInSubject.next(true);
         }
@@ -56,13 +72,21 @@ export class AuthService {
   }
 
   register(userData: { dni: string, nombre: string, apellido: string, email: string, password: string, telefono: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/register`, userData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = 'Error al registrar. Por favor, intenta de nuevo.';
+        if (error.status === 400 && error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
-    localStorage.removeItem(this.rolKey);
+    this.rolesSubject.next([]);
     this.isLoggedInSubject.next(false);
     this.router.navigate(['/login']);
   }
@@ -83,18 +107,35 @@ export class AuthService {
     return userId;
   }
 
-  getRol(): string | null {
-    return localStorage.getItem(this.rolKey);
+  // Extraer los roles del token JWT
+  private extractRolesFromToken(token: string): string[] {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.roles || [];
+    } catch (e) {
+      console.error('Error al decodificar el token JWT:', e);
+      return [];
+    }
+  }
+
+  // Método para obtener el rol principal en el formato esperado (sin "ROLE_")
+  getPrimaryRole(): string | null {
+    const roles = this.rolesSubject.getValue();
+    if (roles.length > 0) {
+      // Tomar el primer rol y quitar el prefijo "ROLE_"
+      return roles[0].replace('ROLE_', '');
+    }
+    return null;
   }
 
   isGerenteGeneral(): boolean {
-    const rol = this.getRol();
-    return rol === 'GERENTE_GENERAL';
+    const roles = this.rolesSubject.getValue();
+    return roles.includes('ROLE_GERENTE_GENERAL');
   }
 
   isRecepcionista(): boolean {
-    const rol = this.getRol();
-    console.log('Verificando isRecepcionista, rol:', rol);
-    return rol === 'RECEPCIONISTA';
+    const roles = this.rolesSubject.getValue();
+    console.log('Verificando isRecepcionista, roles:', roles);
+    return roles.includes('ROLE_RECEPCIONISTA');
   }
 }

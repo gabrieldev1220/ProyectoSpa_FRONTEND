@@ -41,8 +41,11 @@ export class AdminClientesComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.toastr.error('Error al cargar los clientes.', 'Error');
+        this.toastr.error(error.message || 'Error al cargar los clientes.', 'Error');
         console.error('Error al cargar clientes:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
       }
     });
   }
@@ -63,8 +66,11 @@ export class AdminClientesComponent implements OnInit {
         this.resetForm();
       },
       error: (error) => {
-        this.toastr.error('Error al crear el cliente.', 'Error');
+        this.toastr.error(error.message || 'Error al crear el cliente.', 'Error');
         console.error('Error al crear cliente:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
       }
     });
   }
@@ -82,8 +88,11 @@ export class AdminClientesComponent implements OnInit {
         this.resetForm();
       },
       error: (error) => {
-        this.toastr.error('Error al actualizar el cliente.', 'Error');
+        this.toastr.error(error.message || 'Error al actualizar el cliente.', 'Error');
         console.error('Error al actualizar cliente:', error);
+        if (error.message.includes('No estás autenticado')) {
+          this.authService.logout();
+        }
       }
     });
   }
@@ -96,8 +105,11 @@ export class AdminClientesComponent implements OnInit {
           this.loadClientes();
         },
         error: (error) => {
-          this.toastr.error('Error al eliminar el cliente.', 'Error');
+          this.toastr.error(error.message || 'Error al eliminar el cliente.', 'Error');
           console.error('Error al eliminar cliente:', error);
+          if (error.message.includes('No estás autenticado')) {
+            this.authService.logout();
+          }
         }
       });
     }
