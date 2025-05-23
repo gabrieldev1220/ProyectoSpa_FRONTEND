@@ -2,8 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/aurea-spa-frontend/browser",
-      "use": "@vercel/static"
+      "src": "package.json",
+      "use": "@vercel/static",
+      "config": {
+        "distDir": "dist/aurea-spa-frontend/browser"
+      }
     }
   ],
   "routes": [
